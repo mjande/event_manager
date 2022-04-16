@@ -6,6 +6,13 @@ def clean_zipcode(zipcode)
   zipcode.to_s.rjust(5, '0')[0..4]
 end
 
+def clean_phone_numbers(phone_number)
+  phone_number.delete!('^0-9')
+  phone_number.delete_prefix!('1') if phone_number.length == 11
+  phone_number = nil unless phone_number.length == 10
+  phone_number
+end
+
 def legislators_by_zipcode(zip)
   civic_info = Google::Apis::CivicinfoV2::CivicInfoService.new
   civic_info.key = 'AIzaSyClRzDqDh5MsXwnCWi0kOiiBivP6JsSyBw'
@@ -42,6 +49,7 @@ contents = CSV.open(
 template_letter = File.read('form_letter.erb')
 erb_template = ERB.new template_letter
 
+=begin 
 contents.each do |row|
   id = row[0]
   name = row[:first_name]
@@ -53,4 +61,7 @@ contents.each do |row|
   form_letter = erb_template.result(binding)
 
   save_thank_you_letter(id, form_letter)
-end
+end 
+=end
+
+puts clean_phone_numbers('+1 (616) 780-1475')
